@@ -7,3 +7,5 @@ export const WordsInDatabase = {
     9: 21342,   
     10: 17838,
 }
+
+export const secretPhrase = process.env.REACT_APP_DECRYPTION_PHRASE;

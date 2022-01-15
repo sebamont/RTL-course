@@ -11,7 +11,7 @@ interface InputGridRowProps {
 
 interface LetterMatch {
   letter: string;
-  score: "exact" | "includes" | "bad";
+  scoreColor: "green" | "yellow" | "gray";
 }
 
 const InputGridRow: FC<InputGridRowProps> = ({
@@ -23,17 +23,21 @@ const InputGridRow: FC<InputGridRowProps> = ({
   const [locked, setLocked] = useState(false);
   const [attemptWord, setAttemptWord] = useState("");
   const [letterMatch, setLetterMatch] = useState<LetterMatch[]>([]);
+
+  const submitValidAttempt = (str: string) => {
+    setAttemptWord(str.toLowerCase());
+    setLocked(true);
+  };
+
   const handleOutput = async (str: string) => {
     if (str.length === hiddenWord.length) {
       if (hiddenWord === str) {
-        setAttemptWord(str.toLowerCase());
-        setLocked(true)
+        submitValidAttempt(str);
         return alert("You won!");
       }
       const isValidAttempt = await isAValidWord(str);
       if (isValidAttempt) {
-        setAttemptWord(str.toLowerCase());
-        setLocked(true);
+        submitValidAttempt(str);
         if (rowNumber < posibleAttempts - 1) {
           return document.getElementById(`${rowNumber + 1}-0`)?.focus();
         }
@@ -48,17 +52,20 @@ const InputGridRow: FC<InputGridRowProps> = ({
     const attemptWordAsArray = attemptWord.split("");
     const match: LetterMatch[] = attemptWordAsArray.map((letter) => ({
       letter: letter,
-      score: "bad",
+      scoreColor: "gray",
     }));
     for (let i = attemptWordAsArray.length - 1; i >= 0; i--) {
       if (hiddenWord[i] === attemptWord[i]) {
-        match[i].score = "exact";
+        match[i].scoreColor = "green";
         hiddenWordAsArray.splice(i, 1);
       }
     }
     attemptWordAsArray.forEach((letter, i) => {
-      if (hiddenWordAsArray.includes(letter) && match[i].score !== "exact") {
-        match[i].score = "includes";
+      if (
+        hiddenWordAsArray.includes(letter) &&
+        match[i].scoreColor !== "green"
+      ) {
+        match[i].scoreColor = "yellow";
         hiddenWordAsArray.splice(hiddenWordAsArray.indexOf(letter), 1);
       }
     });
@@ -83,12 +90,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
           style:
             letterMatch.length === hiddenWord.length
               ? {
-                  backgroundColor:
-                    letterMatch[index].score === "exact"
-                      ? "green"
-                      : letterMatch[index].score === "includes"
-                      ? "yellow"
-                      : "gray",
+                  backgroundColor: letterMatch[index].scoreColor,
                 }
               : {},
           id: `${rowNumber}-${index}`,

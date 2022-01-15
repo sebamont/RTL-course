@@ -1,25 +1,32 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
-import { WordsInDatabase } from "../helpers/constants";
+import {  secretPhrase, WordsInDatabase } from "../helpers/constants";
 import { isAValidWord } from "../helpers/functions";
 import InputGrid from "../components/InputGrid";
-import { useLocation } from "react-router-dom";
 
 const Game: FC = () => {
   const { search } = useLocation();
   const [hiddenWord, sethiddenWord] = useState("");
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
 
+  const QUERYWORD = useMemo(() => {
+    const encryptedHash = queryParams.get("w")?.replaceAll(" ","+");
+    if(secretPhrase && encryptedHash){
+      return CryptoJS.AES.decrypt(encryptedHash, secretPhrase).toString(CryptoJS.enc.Utf8)
+    }
+  } ,[queryParams])
+
   const DIFFICULTY = useMemo(() => {
-    const queryWord = queryParams.get("w");
     const difficulty = queryParams.get("difficulty");
-    return queryWord && queryWord.length > 3 && queryWord.length < 11
-      ? (queryWord.length as 4 | 5 | 6 | 7 | 8 | 9 | 10)
+    return QUERYWORD && QUERYWORD.length > 3 && QUERYWORD.length < 11
+      ? (QUERYWORD.length as 4 | 5 | 6 | 7 | 8 | 9 | 10)
       : difficulty && Number(difficulty) > 3 && Number(difficulty) < 11
       ? (Number(difficulty) as 4 | 5 | 6 | 7 | 8 | 9 | 10)
       : 5;
-  }, [queryParams]);
+  }, [queryParams, QUERYWORD]);
 
   const ATTEMPTS = useMemo(() => {
     const attempts = queryParams.get("attempts");
@@ -31,9 +38,9 @@ const Game: FC = () => {
   useEffect(() => {
     const fetchWords = async () => {
       let validWord = false;
-      const queryWord = queryParams.get("w")
-      if(queryWord && queryWord.length > 3 && queryWord.length < 10 ){
-        sethiddenWord(queryWord)
+      
+      if(QUERYWORD && QUERYWORD.length > 3 && QUERYWORD.length < 10 ){
+        sethiddenWord(QUERYWORD)
           validWord=true;
       }
       while (!validWord) {
@@ -55,10 +62,11 @@ const Game: FC = () => {
       }
     };
     fetchWords();
-  }, [DIFFICULTY, queryParams]);
+  }, [DIFFICULTY, queryParams, QUERYWORD]);
 
   return (
     <>
+    {hiddenWord}
       {hiddenWord && (
         <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} />
       )}

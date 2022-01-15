@@ -1,5 +1,5 @@
 export const WordsInDatabase = {
-    4: 5284,
+    4: 5283,
     5: 9451,
     6: 14626,
     7: 19856,

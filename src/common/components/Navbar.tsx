@@ -1,5 +1,5 @@
 import React from "react";
-import {Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Box,
@@ -9,39 +9,58 @@ import {
   Button,
   useColorModeValue,
   useColorMode,
+  useBreakpointValue,
+  HStack,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+
+import { FaPlay, FaInfoCircle } from "react-icons/fa";
 
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} boxShadow={"base"}>
-        <Container maxW={"container.xl"}>
-        <Flex py={2} alignItems={"center"} justifyContent={"space-between"}>
-          <Box as={RouterLink} to="/"><Text
-  bgGradient={colorMode==='light' ? 'linear(to-l, #553C9A, #521B41)' : 'linear(to-l, #D6BCFA, #FED7E2)'}
-  bgClip='text'
-  fontWeight='extrabold'
->Wordle Battle</Text></Box>
+    <Box
+      bg={useColorModeValue("gray.300", "gray.900")}
+      px={4}
+      boxShadow={"base"}
+    >
+      <Container maxW={"container.xl"}>
+        <Flex py={3} alignItems={"center"} justifyContent={"space-between"}>
+          <Box as={RouterLink} to="/">
+            <Text
+              bgGradient={useColorModeValue(
+                "linear(to-l, #553C9A, #521B41)",
+                "linear(to-l, #D6BCFA, #FED7E2)"
+              )}
+              bgClip="text"
+              fontWeight="extrabold"
+            >
+              Wordle Battle
+            </Text>
+          </Box>
 
-          <Flex alignItems={"center"}>
-              <Button
-                variant={"solid"}
-                colorScheme={"purple"}
-                size={"sm"}
-                mr={4}
-                rightIcon={<div style={{transform: 'rotate(90deg)'}}> <TriangleUpIcon /></div>}
-                as={RouterLink}
-                to={"/play?w=U2FsdGVkX1+f5paxrDQqRaRT77/DZTL6ZsodFYhHb+Y="}
-              >
-                Quick play
-              </Button>
-              <Button onClick={toggleColorMode} >
-                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-              </Button>
-          </Flex>
+          <HStack alignItems={"center"} spacing="3px">
+            <Button
+              variant={"solid"}
+              colorScheme={"purple"}
+              size={"sm"}
+              mr={4}
+              rightIcon={<FaPlay />}
+              as={RouterLink}
+              to={"/play?w=U2FsdGVkX1+f5paxrDQqRaRT77/DZTL6ZsodFYhHb+Y="}
+              iconSpacing={useBreakpointValue({base:0, md: "5px"})}
+            >
+              {useBreakpointValue({base:"", md:"Quick play"})}
+            </Button>
+            <Button onClick={toggleColorMode} title="Toggle color mode" >
+              {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            </Button>
+            <Button title="How to play">
+                <FaInfoCircle />
+            </Button>
+          </HStack>
         </Flex>
-        </Container>
-      </Box>
+      </Container>
+    </Box>
   );
 }

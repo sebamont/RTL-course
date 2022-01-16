@@ -7,6 +7,7 @@ import {
   theme,
   Tooltip,
   Text,
+  Image,
 } from "@chakra-ui/react";
 
 import { MicrochartBar } from "../../../common/components/MicrochartBar";
@@ -21,7 +22,7 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts}) => {
   return (
     <HStack
       my={3}
-      pt={2}
+      py={2}
       w="full"
       borderBottom={`2px solid ${theme.colors.purple[200]}`}
       h={16}
@@ -33,7 +34,7 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts}) => {
          <Tooltip label={"More game modes coming soon..."}>
           <Flex direction={"column"} alignItems={"center"}>
               <Text fontSize={"2xl"} fontWeight={"extrabold"}>
-                Classic
+                {attempts===5&&difficulty===5 ? "Classic" : "Custom"}
               </Text>
             <Text fontSize={"xs"}>Game Mode</Text>
           </Flex>
@@ -56,6 +57,14 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts}) => {
                 {attempts}
               </Text>
             <Text fontSize={"xs"}>Attempts</Text>
+          </Flex>
+        </Tooltip>
+      </Box>
+      <Box>
+        <Tooltip label={"more languages coming soon..."}>
+          <Flex direction={"column"} alignItems={"center"}>
+            <Image boxSize={"36px"} objectFit={"cover"} src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/285/flag-united-kingdom_1f1ec-1f1e7.png" alt="GB Flag"/>
+            <Text fontSize={"xs"}>Language</Text>
           </Flex>
         </Tooltip>
       </Box>

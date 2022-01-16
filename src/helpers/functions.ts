@@ -1,4 +1,5 @@
 import axios from "axios"
+import { LetterMatch, SquareEmojis } from "../types/types";
 
 export const isAValidWord = async(word:string) => {
     try {
@@ -14,5 +15,8 @@ export const isAValidWord = async(word:string) => {
     } catch (error) {
         return false
     }
-    
+}
+
+export const drawEmojiRow = (letterMatchArr:LetterMatch[]) => {
+  return letterMatchArr.map((letterMatch) => SquareEmojis[letterMatch.scoreColor]).join("")
 }

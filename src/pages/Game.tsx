@@ -3,13 +3,16 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
+import InputGrid from "../components/InputGrid";
+import { GameStatus, NumberFrom4To10 } from "../types/types";
 import {  secretPhrase, WordsInDatabase } from "../helpers/constants";
 import { isAValidWord } from "../helpers/functions";
-import InputGrid from "../components/InputGrid";
 
 const Game: FC = () => {
   const { search } = useLocation();
   const [hiddenWord, sethiddenWord] = useState("");
+  const [gameStatus, setGameStatus] = useState<GameStatus>("playing")
+  const [emojiDrawResult, setEmojiDrawResult] = useState<string[]>([])
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
 
   const QUERYWORD = useMemo(() => {
@@ -22,9 +25,9 @@ const Game: FC = () => {
   const DIFFICULTY = useMemo(() => {
     const difficulty = queryParams.get("difficulty");
     return QUERYWORD && QUERYWORD.length > 3 && QUERYWORD.length < 11
-      ? (QUERYWORD.length as 4 | 5 | 6 | 7 | 8 | 9 | 10)
+      ? (QUERYWORD.length as NumberFrom4To10)
       : difficulty && Number(difficulty) > 3 && Number(difficulty) < 11
-      ? (Number(difficulty) as 4 | 5 | 6 | 7 | 8 | 9 | 10)
+      ? (Number(difficulty) as NumberFrom4To10)
       : 5;
   }, [queryParams, QUERYWORD]);
 
@@ -66,9 +69,21 @@ const Game: FC = () => {
 
   return (
     <>
-    {hiddenWord}
       {hiddenWord && (
-        <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} />
+        <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} gameStatus={gameStatus} setGameStatus={setGameStatus} setEmojiDrawResult={setEmojiDrawResult}/>
+      )}
+      {gameStatus==="lost" && (
+        <div>
+          <p>You lost: the word was {hiddenWord}</p>
+        </div>
+      )}
+      {gameStatus==="won" && (
+        <div>
+          <p>You won on: {emojiDrawResult.length}/{ATTEMPTS} attempts!</p>
+          <div>
+            {emojiDrawResult.map((row,i) => <div key={i}>{row} </div>)}
+          </div>
+        </div>
       )}
     </>
   );

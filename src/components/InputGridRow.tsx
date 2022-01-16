@@ -1,17 +1,17 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import RICIBs from "react-individual-character-input-boxes";
-import { isAValidWord } from "../helpers/functions";
+
+import { GameStatus, LetterMatch } from "../types/types";
+import { drawEmojiRow, isAValidWord } from "../helpers/functions";
 
 interface InputGridRowProps {
   hiddenWord: string;
   autofocus?: boolean;
   rowNumber: number;
   posibleAttempts: number;
-}
-
-interface LetterMatch {
-  letter: string;
-  scoreColor: "green" | "yellow" | "gray";
+  gameStatus: GameStatus;
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+  setEmojiDrawResult: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const InputGridRow: FC<InputGridRowProps> = ({
@@ -19,6 +19,9 @@ const InputGridRow: FC<InputGridRowProps> = ({
   autofocus = false,
   rowNumber,
   posibleAttempts,
+  gameStatus,
+  setGameStatus,
+  setEmojiDrawResult
 }) => {
   const [locked, setLocked] = useState(false);
   const [attemptWord, setAttemptWord] = useState("");
@@ -33,7 +36,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
     if (str.length === hiddenWord.length) {
       if (hiddenWord === str) {
         submitValidAttempt(str);
-        return alert("You won!");
+        return setGameStatus("won");
       }
       const isValidAttempt = await isAValidWord(str);
       if (isValidAttempt) {
@@ -41,7 +44,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
         if (rowNumber < posibleAttempts - 1) {
           return document.getElementById(`${rowNumber + 1}-0`)?.focus();
         }
-        return alert("you lost, the word was: " + hiddenWord);
+        return setGameStatus("lost");
       }
       return alert("Invalid word");
     }
@@ -70,7 +73,8 @@ const InputGridRow: FC<InputGridRowProps> = ({
       }
     });
     setLetterMatch(match);
-  }, [attemptWord, hiddenWord]);
+    setEmojiDrawResult((prev) => prev.concat(drawEmojiRow(match)))
+  }, [attemptWord, hiddenWord, setEmojiDrawResult]);
 
   useEffect(() => {
     if (attemptWord !== "") {
@@ -86,7 +90,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
       inputProps={Array(hiddenWord.length)
         .fill(0)
         .map((_, index) => ({
-          disabled: locked,
+          disabled: gameStatus !== "playing" || locked,
           style:
             letterMatch.length === hiddenWord.length
               ? {

@@ -35,7 +35,7 @@ export default function Nav() {
               bgClip="text"
               fontWeight="extrabold"
             >
-              Wordle Battle
+              Wordless
             </Text>
           </Box>
 
@@ -47,7 +47,7 @@ export default function Nav() {
               mr={4}
               rightIcon={<FaPlay />}
               as={RouterLink}
-              to={"/play?w=U2FsdGVkX1+f5paxrDQqRaRT77/DZTL6ZsodFYhHb+Y="}
+              to={"/play"}
               iconSpacing={useBreakpointValue({base:0, md: "5px"})}
             >
               {useBreakpointValue({base:"", md:"Quick play"})}

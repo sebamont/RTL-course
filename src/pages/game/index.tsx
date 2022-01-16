@@ -5,10 +5,11 @@ import CryptoJS from "crypto-js";
 
 import InputGrid from "./components/InputGrid";
 import { GameStatus, NumberFrom4To10 } from "./types";
-import {  secretPhrase, WordsInDatabase } from "../../helpers/constants";
+import {  secretPhrase } from "../../helpers/constants";
 import { isAValidWord } from "../../helpers/functions";
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Spinner, VStack } from "@chakra-ui/react";
 import GameInfo from "./components/GameInfo";
+import ShareButtons from "../../common/components/ShareButtons";
 
 const Game: FC = () => {
   const { search } = useLocation();
@@ -49,12 +50,16 @@ const Game: FC = () => {
           validWord=true;
       }
       while (!validWord) {
-        const numberOfWords: number = WordsInDatabase[DIFFICULTY];
-        const randomNumber = Math.floor(Math.random() * Number(numberOfWords));
+        // const numberOfWords: number = WordsInDatabase[DIFFICULTY];
+        // const randomNumber = Math.floor(Math.random() * Number(numberOfWords));
+        // const res = await axios.get(
+        //   `https://sheet.best/api/sheets/c72e3bdd-a075-418c-8ec5-62bafcbd96bc/tabs/${DIFFICULTY}letters/search?Report=0&_limit=1&_offset=${randomNumber}`
+        // );
+        // const temptativeWord = res.data[0].Word;
         const res = await axios.get(
-          `https://sheet.best/api/sheets/c72e3bdd-a075-418c-8ec5-62bafcbd96bc/tabs/${DIFFICULTY}letters/search?Report=0&_limit=1&_offset=${randomNumber}`
+          'https://intense-reaches-30246.herokuapp.com/'
         );
-        const temptativeWord = res.data[0].Word;
+        const temptativeWord = res.data.word;
         const validTemptativeWord = await isAValidWord(temptativeWord);
         if (temptativeWord && validTemptativeWord) {
           sethiddenWord(temptativeWord.toLowerCase());
@@ -73,9 +78,11 @@ const Game: FC = () => {
     <VStack>
       <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS}/>
       <Box>
-      {hiddenWord && (
+      {hiddenWord ? (
         <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} gameStatus={gameStatus} setGameStatus={setGameStatus} setEmojiDrawResult={setEmojiDrawResult}/>
-      )}
+      ) : 
+      <Spinner size="xl" />
+      }
       {gameStatus==="lost" && (
         <div>
           <p>You lost: the word was {hiddenWord}</p>
@@ -84,9 +91,8 @@ const Game: FC = () => {
       {gameStatus==="won" && (
         <div>
           <p>You won on: {emojiDrawResult.length}/{ATTEMPTS} attempts!</p>
-          <div>
-            {emojiDrawResult.map((row,i) => <div key={i}>{row} </div>)}
-          </div>
+          <div id="result-as-emojis">{emojiDrawResult.map((row,i) => <div key={i}>{row} </div>)}</div>
+          <ShareButtons linkHref={window.location.href} />
         </div>
       )}
       </Box>

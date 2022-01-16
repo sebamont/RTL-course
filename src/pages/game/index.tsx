@@ -3,10 +3,12 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
-import InputGrid from "../components/InputGrid";
-import { GameStatus, NumberFrom4To10 } from "../types/types";
-import {  secretPhrase, WordsInDatabase } from "../helpers/constants";
-import { isAValidWord } from "../helpers/functions";
+import InputGrid from "./components/InputGrid";
+import { GameStatus, NumberFrom4To10 } from "./types";
+import {  secretPhrase, WordsInDatabase } from "../../helpers/constants";
+import { isAValidWord } from "../../helpers/functions";
+import { Box, VStack } from "@chakra-ui/react";
+import GameInfo from "./components/GameInfo";
 
 const Game: FC = () => {
   const { search } = useLocation();
@@ -68,7 +70,9 @@ const Game: FC = () => {
   }, [DIFFICULTY, queryParams, QUERYWORD]);
 
   return (
-    <>
+    <VStack>
+      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS}/>
+      <Box>
       {hiddenWord && (
         <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} gameStatus={gameStatus} setGameStatus={setGameStatus} setEmojiDrawResult={setEmojiDrawResult}/>
       )}
@@ -85,7 +89,8 @@ const Game: FC = () => {
           </div>
         </div>
       )}
-    </>
+      </Box>
+    </VStack>
   );
 };
 

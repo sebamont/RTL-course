@@ -1,8 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import RICIBs from "react-individual-character-input-boxes";
 
-import { GameStatus, LetterMatch } from "../types/types";
-import { drawEmojiRow, isAValidWord } from "../helpers/functions";
+import { useTheme, useColorMode } from "@chakra-ui/react";
+
+import { GameStatus, LetterMatch } from "../types";
+import { drawEmojiRow, isAValidWord } from "../../../helpers/functions";
 
 interface InputGridRowProps {
   hiddenWord: string;
@@ -23,6 +25,8 @@ const InputGridRow: FC<InputGridRowProps> = ({
   setGameStatus,
   setEmojiDrawResult
 }) => {
+  const theme = useTheme()
+  const {colorMode} = useColorMode()
   const [locked, setLocked] = useState(false);
   const [attemptWord, setAttemptWord] = useState("");
   const [letterMatch, setLetterMatch] = useState<LetterMatch[]>([]);
@@ -96,7 +100,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
               ? {
                   backgroundColor: letterMatch[index].scoreColor,
                 }
-              : {},
+              : {border: `2px solid ${theme.colors.gray[colorMode==='dark' ? 400 : 600]}`, backgroundColor: colorMode === 'dark' ? theme.colors.gray[700] : theme.colors.white},
           id: `${rowNumber}-${index}`,
         }))}
       inputRegExp={/^[a-zA-Z]$/}

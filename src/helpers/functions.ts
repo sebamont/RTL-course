@@ -1,5 +1,5 @@
 import axios from "axios"
-import { LetterMatch, SquareEmojis } from "../types/types";
+import { LetterMatch, SquareEmojis } from "../pages/game/types";
 
 export const isAValidWord = async(word:string) => {
     try {

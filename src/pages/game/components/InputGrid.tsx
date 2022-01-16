@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 
 import InputGridRow from "./InputGridRow";
-import { GameStatus } from "../types/types";
+import { GameStatus } from "../types";
+import { Flex } from "@chakra-ui/react";
 
 interface InputGridProps {
   hiddenWord: string;
@@ -13,7 +14,7 @@ interface InputGridProps {
 
 const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus, setGameStatus, setEmojiDrawResult }) => {
   return (
-    <div>
+    <Flex direction={"column"} alignItems={"center"} >
       {Array(posibleAttempts)
         .fill(0)
         .map((_, index) => (
@@ -28,7 +29,7 @@ const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus
             setEmojiDrawResult={setEmojiDrawResult}
           />
         ))}
-    </div>
+    </Flex>
   );
 };
 

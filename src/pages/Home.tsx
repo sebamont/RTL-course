@@ -24,7 +24,7 @@ export const Home = () => {
   };
   return (
     <div>
-      <input
+      {/* <input
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -35,7 +35,7 @@ export const Home = () => {
             <p>{encryptedValue}</p>
             <button onClick={handleClickDecrypt}>Decrypt</button>
  <p>{decryptedValue}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

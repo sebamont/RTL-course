@@ -34,8 +34,9 @@ export default function Nav() {
               )}
               bgClip="text"
               fontWeight="extrabold"
+              fontSize={"lg"}
             >
-              Wordless
+              &lt;Hello Wordle&gt;
             </Text>
           </Box>
 

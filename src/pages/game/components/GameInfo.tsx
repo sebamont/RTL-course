@@ -7,18 +7,30 @@ import {
   theme,
   Tooltip,
   Text,
-  Image,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { FaShare } from "react-icons/fa";
 
 import { MicrochartBar } from "../../../common/components/MicrochartBar";
 import { NumberFrom4To10 } from "../types";
+import ShareButtons from "../../../common/components/ShareButtons";
 
 interface GameInfoProps {
     difficulty: NumberFrom4To10
     attempts: number
+    shareableLink: string
 }
 
-const GameInfo:FC<GameInfoProps> = ({difficulty, attempts}) => {
+const GameInfo:FC<GameInfoProps> = ({difficulty, attempts, shareableLink}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <HStack
       my={3}
@@ -60,14 +72,34 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts}) => {
           </Flex>
         </Tooltip>
       </Box>
-      <Box>
+      {/* <Box>
         <Tooltip label={"more languages coming soon..."}>
           <Flex direction={"column"} alignItems={"center"}>
             <Image boxSize={"36px"} objectFit={"cover"} src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/285/flag-united-kingdom_1f1ec-1f1e7.png" alt="GB Flag"/>
             <Text fontSize={"xs"}>Language</Text>
           </Flex>
         </Tooltip>
-      </Box>
+      </Box> */}
+      <Button title="Share current game" onClick={onOpen}>
+          <FaShare />
+      </Button>
+      <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+              <ModalHeader>
+                  Share current game
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                  <ShareButtons linkHref={shareableLink} twMessage="I challenge you to solve this Wordle!" wppMessage="I challenge you to solve this Wordle" />
+              </ModalBody>
+              <ModalFooter>
+              <Button colorScheme='gray' mr={3} onClick={onClose}>
+              Close
+            </Button>
+              </ModalFooter>
+          </ModalContent>
+      </Modal>
     </HStack>
   );
 };

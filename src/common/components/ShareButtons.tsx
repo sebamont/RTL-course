@@ -35,7 +35,7 @@ const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, twMessage="Hey! I've ju
       <Divider />
       <HStack alignItems={"center"} spacing="4px">
           <Button colorScheme={"green"} as={Link} href={`https://wa.me/?text=${wppMessage}%0A ${encodeURIComponent(linkHref)}` } isExternal>Share via whatsapp</Button>
-          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(linkHref)}&text=${twMessage}` } isExternal>Share via Twitter</Button>
+          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(linkHref)}&text=${twMessage}%0a` } isExternal>Share via Twitter</Button>
       </HStack>
       
     </VStack>

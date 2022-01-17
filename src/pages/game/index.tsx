@@ -44,6 +44,18 @@ const Game: FC = () => {
       : 5;
   }, [queryParams]);
 
+  const shareableLink = useMemo(() => {
+    if (secretPhrase) {
+      return (
+        window.location.href +
+        (queryParams.get("w") !== null
+          ? ""
+          : `${window.location.href.endsWith("play") ? "?&" : "&"}w=${CryptoJS.AES.encrypt(hiddenWord, secretPhrase).toString()}`)
+      );
+    }
+    return window.location.href
+  },[hiddenWord, queryParams])
+
   useEffect(() => {
     const fetchWords = async () => {
       let validWord = false;
@@ -77,17 +89,7 @@ const Game: FC = () => {
     fetchWords();
   }, [DIFFICULTY, queryParams, QUERYWORD]);
 
-  const defineCompleteLinkHref = () => {
-    if (secretPhrase) {
-      return (
-        window.location.href +
-        (queryParams.get("w") !== null
-          ? ""
-          : `${window.location.href.endsWith("play") ? "?&" : "&"}w=${CryptoJS.AES.encrypt(hiddenWord, secretPhrase).toString()}`)
-      );
-    }
-    return window.location.href
-  };
+  
 
   useEffect( () => {
     const fetchDefinition = async() => {
@@ -101,7 +103,7 @@ const Game: FC = () => {
 
   return (
     <VStack>
-      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS} />
+      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS}  shareableLink={shareableLink}/>
       <Box>
         {hiddenWord ? (
           <InputGrid
@@ -119,7 +121,7 @@ const Game: FC = () => {
             <p>You lost: the word was {hiddenWord}</p>
             <p>It means {hiddenWordDefinition}</p>
             <ShareButtons
-              linkHref={defineCompleteLinkHref()}
+              linkHref={shareableLink}
               twMessage={
                 "I couldnt find the hidden word! 🤔 %0a Do you think you could? %0a "
               }
@@ -140,7 +142,7 @@ const Game: FC = () => {
               ))}
             </div>
             <ShareButtons
-              linkHref={defineCompleteLinkHref()}
+              linkHref={shareableLink}
               twMessage={
                 emojiDrawResult.join("%0a") +
                 `%0a Took me ${emojiDrawResult.length} attempt${emojiDrawResult.length > 1 ? "s" :""}! %0a Could you do it better?`

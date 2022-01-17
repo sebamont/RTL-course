@@ -14,7 +14,7 @@ function App() {
       <Nav />
       <Container
         maxW="container.md"
-        minH={"calc(100vh - 120px)"}
+        minH={"calc(100vh - 64px)"}
         pb={10}
       >
         <Routes>

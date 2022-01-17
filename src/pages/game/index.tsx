@@ -5,8 +5,8 @@ import CryptoJS from "crypto-js";
 
 import InputGrid from "./components/InputGrid";
 import { GameStatus, NumberFrom4To10 } from "./types";
-import {  secretPhrase } from "../../helpers/constants";
-import { isAValidWord } from "../../helpers/functions";
+import { secretPhrase } from "../../helpers/constants";
+import { getWordDefinition, isAValidWord } from "../../helpers/functions";
 import { Box, Spinner, VStack } from "@chakra-ui/react";
 import GameInfo from "./components/GameInfo";
 import ShareButtons from "../../common/components/ShareButtons";
@@ -14,16 +14,19 @@ import ShareButtons from "../../common/components/ShareButtons";
 const Game: FC = () => {
   const { search } = useLocation();
   const [hiddenWord, sethiddenWord] = useState("");
-  const [gameStatus, setGameStatus] = useState<GameStatus>("playing")
-  const [emojiDrawResult, setEmojiDrawResult] = useState<string[]>([])
+  const [hiddenWordDefinition, setHiddenWordDefinition] = useState("")
+  const [gameStatus, setGameStatus] = useState<GameStatus>("playing");
+  const [emojiDrawResult, setEmojiDrawResult] = useState<string[]>([]);
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
 
   const QUERYWORD = useMemo(() => {
-    const encryptedHash = queryParams.get("w")?.replaceAll(" ","+");
-    if(secretPhrase && encryptedHash){
-      return CryptoJS.AES.decrypt(encryptedHash, secretPhrase).toString(CryptoJS.enc.Utf8)
+    const encryptedHash = queryParams.get("w")?.replaceAll(" ", "+");
+    if (secretPhrase && encryptedHash) {
+      return CryptoJS.AES.decrypt(encryptedHash, secretPhrase).toString(
+        CryptoJS.enc.Utf8
+      );
     }
-  } ,[queryParams])
+  }, [queryParams]);
 
   const DIFFICULTY = useMemo(() => {
     const difficulty = queryParams.get("difficulty");
@@ -44,10 +47,10 @@ const Game: FC = () => {
   useEffect(() => {
     const fetchWords = async () => {
       let validWord = false;
-      
-      if(QUERYWORD && QUERYWORD.length > 3 && QUERYWORD.length < 10 ){
-        sethiddenWord(QUERYWORD)
-          validWord=true;
+
+      if (QUERYWORD && QUERYWORD.length > 3 && QUERYWORD.length < 10) {
+        sethiddenWord(QUERYWORD);
+        validWord = true;
       }
       while (!validWord) {
         // const numberOfWords: number = WordsInDatabase[DIFFICULTY];
@@ -57,7 +60,7 @@ const Game: FC = () => {
         // );
         // const temptativeWord = res.data[0].Word;
         const res = await axios.get(
-          'https://intense-reaches-30246.herokuapp.com/'
+          "https://intense-reaches-30246.herokuapp.com/"
         );
         const temptativeWord = res.data.word;
         const validTemptativeWord = await isAValidWord(temptativeWord);
@@ -74,27 +77,77 @@ const Game: FC = () => {
     fetchWords();
   }, [DIFFICULTY, queryParams, QUERYWORD]);
 
+  const defineCompleteLinkHref = () => {
+    if (secretPhrase) {
+      return (
+        window.location.href +
+        (queryParams.get("w") !== null
+          ? ""
+          : `${window.location.href.endsWith("play") ? "?&" : "&"}w=${CryptoJS.AES.encrypt(hiddenWord, secretPhrase).toString()}`)
+      );
+    }
+    return window.location.href
+  };
+
+  useEffect( () => {
+    const fetchDefinition = async() => {
+      const definition = await getWordDefinition(hiddenWord)
+      setHiddenWordDefinition(definition)
+    }
+    if(gameStatus==="lost"){
+      fetchDefinition()
+    }
+  },[gameStatus, hiddenWord])
+
   return (
     <VStack>
-      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS}/>
+      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS} />
       <Box>
-      {hiddenWord ? (
-        <InputGrid hiddenWord={hiddenWord} posibleAttempts={ATTEMPTS} gameStatus={gameStatus} setGameStatus={setGameStatus} setEmojiDrawResult={setEmojiDrawResult}/>
-      ) : 
-      <Spinner size="xl" />
-      }
-      {gameStatus==="lost" && (
-        <div>
-          <p>You lost: the word was {hiddenWord}</p>
-        </div>
-      )}
-      {gameStatus==="won" && (
-        <div>
-          <p>You won on: {emojiDrawResult.length}/{ATTEMPTS} attempts!</p>
-          <div id="result-as-emojis">{emojiDrawResult.map((row,i) => <div key={i}>{row} </div>)}</div>
-          <ShareButtons linkHref={window.location.href} />
-        </div>
-      )}
+        {hiddenWord ? (
+          <InputGrid
+            hiddenWord={hiddenWord}
+            posibleAttempts={ATTEMPTS}
+            gameStatus={gameStatus}
+            setGameStatus={setGameStatus}
+            setEmojiDrawResult={setEmojiDrawResult}
+          />
+        ) : (
+          <Spinner size="xl" />
+        )}
+        {gameStatus === "lost" && (
+          <div>
+            <p>You lost: the word was {hiddenWord}</p>
+            <p>It means {hiddenWordDefinition}</p>
+            <ShareButtons
+              linkHref={defineCompleteLinkHref()}
+              twMessage={
+                "I couldnt find the hidden word! 🤔 %0a Do you think you could? %0a "
+              }
+              wppMessage={
+                "I couldnt find the hidden word! :( %0a Do you think you could? %0a "
+              }
+            />
+          </div>
+        )}
+        {gameStatus === "won" && (
+          <div>
+            <p>
+              You won on: {emojiDrawResult.length}/{ATTEMPTS} attempts!
+            </p>
+            <div id="result-as-emojis">
+              {emojiDrawResult.map((row, i) => (
+                <div key={i}>{row} </div>
+              ))}
+            </div>
+            <ShareButtons
+              linkHref={defineCompleteLinkHref()}
+              twMessage={
+                emojiDrawResult.join("%0a") +
+                `%0a Took me ${emojiDrawResult.length} attempt${emojiDrawResult.length > 1 ? "s" :""}! %0a Could you do it better?`
+              }
+            />
+          </div>
+        )}
       </Box>
     </VStack>
   );

@@ -13,11 +13,13 @@ import {
 } from "@chakra-ui/react";
 
 interface ShareButtonsProps {
+    twMessage?: string
   wppMessage?: string;
   linkHref: string;
 }
-const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, wppMessage="Hey! I've just won this wordle game. Could you? " }) => {
+const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, twMessage="Hey! I've just won this wordle game. Could you? ", wppMessage="Hey! I've just won this wordle game. Could you? " }) => {
   const [copied, setCopied] = useState(false);
+
   return (
     <VStack>
       <InputGroup size="md">
@@ -32,8 +34,8 @@ const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, wppMessage="Hey! I've j
       </InputGroup>
       <Divider />
       <HStack alignItems={"center"} spacing="4px">
-          <Button colorScheme={"green"} as={Link} href={`https://wa.me/?text=${wppMessage} ${linkHref}` } isExternal>Share via whatsapp</Button>
-          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${linkHref}&text=${wppMessage}` } isExternal>Share via Twitter</Button>
+          <Button colorScheme={"green"} as={Link} href={`https://wa.me/?text=${wppMessage}%0A ${encodeURIComponent(linkHref)}` } isExternal>Share via whatsapp</Button>
+          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(linkHref)}&text=${twMessage}` } isExternal>Share via Twitter</Button>
       </HStack>
       
     </VStack>

@@ -36,7 +36,7 @@ export default function Nav() {
               fontWeight="extrabold"
               fontSize={"lg"}
             >
-              &lt;Hello Wordle&gt;
+              &lt;Hello Wordle /&gt;
             </Text>
           </Box>
 

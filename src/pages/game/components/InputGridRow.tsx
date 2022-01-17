@@ -38,7 +38,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
 
   const handleOutput = async (str: string) => {
     if (str.length === hiddenWord.length) {
-      if (hiddenWord === str) {
+      if (hiddenWord === str.toLowerCase()) {
         submitValidAttempt(str);
         return setGameStatus("won");
       }

@@ -38,4 +38,4 @@ export const Home = () => {
       </div> */}
     </div>
   );
-w};
+};

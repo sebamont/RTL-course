@@ -1,4 +1,4 @@
-import React,  from "react";
+import React  from "react";
 // import CryptoJS from "crypto-js";
 // import { secretPhrase } from "../helpers/constants";
 
@@ -38,4 +38,4 @@ export const Home = () => {
       </div> */}
     </div>
   );
-};
+w};

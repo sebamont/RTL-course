@@ -11,13 +11,16 @@ import {
   useColorMode,
   useBreakpointValue,
   HStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 import { FaPlay, FaInfoCircle } from "react-icons/fa";
+import { GameHelpDialog } from "./GameHelpDialog";
 
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box
       bg={useColorModeValue("gray.300", "gray.900")}
@@ -49,19 +52,20 @@ export default function Nav() {
               rightIcon={<FaPlay />}
               as={RouterLink}
               to={"/play"}
-              iconSpacing={useBreakpointValue({base:0, md: "5px"})}
+              iconSpacing={useBreakpointValue({ base: 0, md: "5px" })}
             >
-              {useBreakpointValue({base:"", md:"Quick play"})}
+              {useBreakpointValue({ base: "", md: "Quick play" })}
             </Button>
-            <Button onClick={toggleColorMode} title="Toggle color mode" >
+            <Button onClick={toggleColorMode} title="Toggle color mode">
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
-            <Button title="How to play">
-                <FaInfoCircle />
+            <Button title="How to play" onClick={onOpen}>
+              <FaInfoCircle />
             </Button>
           </HStack>
         </Flex>
       </Container>
+      <GameHelpDialog isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

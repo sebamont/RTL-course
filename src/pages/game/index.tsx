@@ -3,18 +3,19 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
+import { Box, Spinner, VStack } from "@chakra-ui/react";
+
 import InputGrid from "./components/InputGrid";
 import { GameStatus, NumberFrom4To10 } from "./types";
 import { secretPhrase } from "../../helpers/constants";
-import { getWordDefinition, isAValidWord } from "../../helpers/functions";
-import { Box, Spinner, VStack } from "@chakra-ui/react";
+import { getWordDefinition } from "../../helpers/functions";
 import GameInfo from "./components/GameInfo";
 import ShareButtons from "../../common/components/ShareButtons";
 
 const Game: FC = () => {
   const { search } = useLocation();
   const [hiddenWord, sethiddenWord] = useState("");
-  const [hiddenWordDefinition, setHiddenWordDefinition] = useState("")
+  const [hiddenWordDefinition, setHiddenWordDefinition] = useState("");
   const [gameStatus, setGameStatus] = useState<GameStatus>("playing");
   const [emojiDrawResult, setEmojiDrawResult] = useState<string[]>([]);
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
@@ -41,7 +42,7 @@ const Game: FC = () => {
     const attempts = queryParams.get("attempts");
     return attempts && Number(attempts) > 3 && Number(attempts) < 11
       ? Number(attempts)
-      : 5;
+      : 6;
   }, [queryParams]);
 
   const shareableLink = useMemo(() => {
@@ -50,11 +51,13 @@ const Game: FC = () => {
         window.location.href +
         (queryParams.get("w") !== null
           ? ""
-          : `${window.location.href.endsWith("play") ? "?&" : "&"}w=${CryptoJS.AES.encrypt(hiddenWord, secretPhrase).toString()}`)
+          : `${
+              window.location.href.endsWith("play") ? "?&" : "&"
+            }w=${CryptoJS.AES.encrypt(hiddenWord, secretPhrase).toString()}`)
       );
     }
-    return window.location.href
-  },[hiddenWord, queryParams])
+    return window.location.href;
+  }, [hiddenWord, queryParams]);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -65,45 +68,42 @@ const Game: FC = () => {
         validWord = true;
       }
       while (!validWord) {
-        // const numberOfWords: number = WordsInDatabase[DIFFICULTY];
-        // const randomNumber = Math.floor(Math.random() * Number(numberOfWords));
-        // const res = await axios.get(
-        //   `https://sheet.best/api/sheets/c72e3bdd-a075-418c-8ec5-62bafcbd96bc/tabs/${DIFFICULTY}letters/search?Report=0&_limit=1&_offset=${randomNumber}`
-        // );
-        // const temptativeWord = res.data[0].Word;
         const res = await axios.get(
           "https://intense-reaches-30246.herokuapp.com/"
         );
-        const temptativeWord = res.data.word;
-        const validTemptativeWord = await isAValidWord(temptativeWord);
-        if (temptativeWord && validTemptativeWord) {
-          sethiddenWord(temptativeWord.toLowerCase());
+        if (res.data.word) {
+          sethiddenWord(res.data.word.toLowerCase());
           validWord = true;
-        } else {
-          await axios.delete(
-            `https://sheet.best/api/sheets/c72e3bdd-a075-418c-8ec5-62bafcbd96bc/tabs/${DIFFICULTY}letters/search?Word=${temptativeWord}`
-          );
         }
+        // const validTemptativeWord = await isAValidWord(temptativeWord);
+        // if (temptativeWord && validTemptativeWord) {
+        // } else {
+        //   await axios.delete(
+        //     `https://sheet.best/api/sheets/c72e3bdd-a075-418c-8ec5-62bafcbd96bc/tabs/${DIFFICULTY}letters/search?Word=${temptativeWord}`
+        //   );
+        // }
       }
     };
     fetchWords();
   }, [DIFFICULTY, queryParams, QUERYWORD]);
 
-  
-
-  useEffect( () => {
-    const fetchDefinition = async() => {
-      const definition = await getWordDefinition(hiddenWord)
-      setHiddenWordDefinition(definition)
+  useEffect(() => {
+    const fetchDefinition = async () => {
+      const definition = await getWordDefinition(hiddenWord);
+      setHiddenWordDefinition(definition);
+    };
+    if (gameStatus === "lost") {
+      fetchDefinition();
     }
-    if(gameStatus==="lost"){
-      fetchDefinition()
-    }
-  },[gameStatus, hiddenWord])
+  }, [gameStatus, hiddenWord]);
 
   return (
     <VStack>
-      <GameInfo difficulty={DIFFICULTY} attempts={ATTEMPTS}  shareableLink={shareableLink}/>
+      <GameInfo
+        difficulty={DIFFICULTY}
+        attempts={ATTEMPTS}
+        shareableLink={shareableLink}
+      />
       <Box>
         {hiddenWord ? (
           <InputGrid
@@ -145,7 +145,9 @@ const Game: FC = () => {
               linkHref={shareableLink}
               twMessage={
                 emojiDrawResult.join("%0a") +
-                `%0a Took me ${emojiDrawResult.length} attempt${emojiDrawResult.length > 1 ? "s" :""}! %0a Could you do it better?`
+                `%0a Took me ${emojiDrawResult.length} attempt${
+                  emojiDrawResult.length > 1 ? "s" : ""
+                }! %0a Could you do it better?`
               }
             />
           </div>

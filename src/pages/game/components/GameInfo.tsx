@@ -24,13 +24,17 @@ import { NumberFrom4To10 } from "../types";
 import ShareButtons from "../../../common/components/ShareButtons";
 
 interface GameInfoProps {
-    difficulty: NumberFrom4To10
-    attempts: number
-    shareableLink: string
+  difficulty: NumberFrom4To10;
+  attempts: number;
+  shareableLink: string;
 }
 
-const GameInfo:FC<GameInfoProps> = ({difficulty, attempts, shareableLink}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+const GameInfo: FC<GameInfoProps> = ({
+  difficulty,
+  attempts,
+  shareableLink,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <HStack
       my={3}
@@ -42,15 +46,15 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts, shareableLink}) => {
       justifyContent={"space-around"}
       spacing={"30px"}
     >
-         <Box>
-         <Tooltip label={"More game modes coming soon..."}>
+      <Box>
+        <Tooltip label={"More game modes coming soon..."}>
           <Flex direction={"column"} alignItems={"center"}>
-              <Text fontSize={"2xl"} fontWeight={"extrabold"}>
-                {attempts===5&&difficulty===5 ? "Classic" : "Custom"}
-              </Text>
+            <Text fontSize={"2xl"} fontWeight={"extrabold"}>
+              {attempts === 6 && difficulty === 5 ? "Classic" : "Custom"}
+            </Text>
             <Text fontSize={"xs"}>Game Mode</Text>
           </Flex>
-          </Tooltip>
+        </Tooltip>
       </Box>
       <Box>
         <Tooltip label={`${difficulty} letters`}>
@@ -65,9 +69,9 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts, shareableLink}) => {
       <Box>
         <Tooltip label={`${attempts} attempts`}>
           <Flex direction={"column"} alignItems={"center"}>
-              <Text fontSize={"2xl"} fontWeight={"extrabold"}>
-                {attempts}
-              </Text>
+            <Text fontSize={"2xl"} fontWeight={"extrabold"}>
+              {attempts}
+            </Text>
             <Text fontSize={"xs"}>Attempts</Text>
           </Flex>
         </Tooltip>
@@ -81,24 +85,26 @@ const GameInfo:FC<GameInfoProps> = ({difficulty, attempts, shareableLink}) => {
         </Tooltip>
       </Box> */}
       <Button title="Share current game" onClick={onOpen}>
-          <FaShare />
+        <FaShare />
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-              <ModalHeader>
-                  Share current game
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                  <ShareButtons linkHref={shareableLink} twMessage="I challenge you to solve this Wordle!" wppMessage="I challenge you to solve this Wordle" />
-              </ModalBody>
-              <ModalFooter>
-              <Button colorScheme='gray' mr={3} onClick={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Share current game</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <ShareButtons
+              linkHref={shareableLink}
+              twMessage="I challenge you to solve this Wordle!"
+              wppMessage="I challenge you to solve this Wordle"
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="gray" mr={3} onClick={onClose}>
               Close
             </Button>
-              </ModalFooter>
-          </ModalContent>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </HStack>
   );

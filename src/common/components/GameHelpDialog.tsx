@@ -48,6 +48,7 @@ export const GameHelpDialog: FC<GameHelpDialogProps> = ({
               Examples
             </Text>
             <RICIBs
+              handleOutputString={() => {}}
               amount={5}
               inputProps={[
                 {
@@ -116,6 +117,7 @@ export const GameHelpDialog: FC<GameHelpDialogProps> = ({
             </Text>
             <RICIBs
               amount={5}
+              handleOutputString={() => {}}
               inputProps={[
                 {
                   value: "C",
@@ -183,6 +185,7 @@ export const GameHelpDialog: FC<GameHelpDialogProps> = ({
             </Text>
             <RICIBs
               amount={5}
+              handleOutputString={() => {}}
               inputProps={[
                 {
                   value: "C",

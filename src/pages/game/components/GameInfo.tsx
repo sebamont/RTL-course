@@ -22,6 +22,7 @@ import { FaShare } from "react-icons/fa";
 import { MicrochartBar } from "../../../common/components/MicrochartBar";
 import { NumberFrom4To10 } from "../types";
 import ShareButtons from "../../../common/components/ShareButtons";
+import { CLASSIC_FEATURES } from "../../../helpers/constants";
 
 interface GameInfoProps {
   difficulty: NumberFrom4To10;
@@ -50,7 +51,10 @@ const GameInfo: FC<GameInfoProps> = ({
         <Tooltip label={"More game modes coming soon..."}>
           <Flex direction={"column"} alignItems={"center"}>
             <Text fontSize={"2xl"} fontWeight={"extrabold"}>
-              {attempts === 6 && difficulty === 5 ? "Classic" : "Custom"}
+              {attempts === CLASSIC_FEATURES.attempts &&
+              difficulty === CLASSIC_FEATURES.difficulty
+                ? "Classic"
+                : "Custom"}
             </Text>
             <Text fontSize={"xs"}>Game Mode</Text>
           </Flex>

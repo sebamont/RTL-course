@@ -9,9 +9,10 @@ import {
   useColorModeValue,
   Link,
   useDisclosure,
+  useBreakpointValue,
   Center,
   Collapse,
-  HStack,
+  Wrap,
 } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
 import GameModeCard from "../common/components/GameModeCard";
@@ -133,24 +134,30 @@ const GameModes: FC<GameModesProps> = ({ onToggle, buttonRef }) => {
       py={{ base: 8, md: 14 }}
       position="relative"
     >
-      <Box position="absolute" top={10}>
+      <Box position="absolute" top={5}>
         <Button title="Go back" size="xs" onClick={onToggle}>
           <FaArrowLeft />
           &nbsp;Go back
         </Button>
       </Box>
-      <Heading as="h3" fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}>
+      <Heading
+        display={useBreakpointValue({ base: "none", md: "block" })}
+        as="h3"
+        fontSize={"2xl"}
+        color="gray.500"
+      >
         Game modes
       </Heading>
       <Center>
-        <HStack spacing={4}>
+        <Wrap spacing={5} justify="center">
           <GameModeCard gameModeName="Classic" buttonRef={buttonRef} />
           <GameModeCard
             gameModeName="Custom"
             isWordLengthCustom
             areAttemptsCustom
           />
-        </HStack>
+          {/* <GameModeCard gameModeName="Create" isWordCustom areAttemptsCustom /> */}
+        </Wrap>
       </Center>
     </Stack>
   );

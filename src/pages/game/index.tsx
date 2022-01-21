@@ -7,7 +7,7 @@ import { Box, Spinner, VStack } from "@chakra-ui/react";
 
 import InputGrid from "./components/InputGrid";
 import { GameStatus, NumberFrom4To10 } from "./types";
-import { secretPhrase } from "../../helpers/constants";
+import { CLASSIC_FEATURES, secretPhrase } from "../../helpers/constants";
 import { getWordDefinition } from "../../helpers/functions";
 import GameInfo from "./components/GameInfo";
 import ShareButtons from "../../common/components/ShareButtons";
@@ -35,14 +35,14 @@ const Game: FC = () => {
       ? (QUERYWORD.length as NumberFrom4To10)
       : difficulty && Number(difficulty) > 3 && Number(difficulty) < 11
       ? (Number(difficulty) as NumberFrom4To10)
-      : 5;
+      : CLASSIC_FEATURES.difficulty;
   }, [queryParams, QUERYWORD]);
 
   const ATTEMPTS = useMemo(() => {
     const attempts = queryParams.get("attempts");
     return attempts && Number(attempts) > 3 && Number(attempts) < 11
       ? Number(attempts)
-      : 6;
+      : CLASSIC_FEATURES.attempts;
   }, [queryParams]);
 
   const shareableLink = useMemo(() => {

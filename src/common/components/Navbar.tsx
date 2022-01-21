@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
@@ -11,16 +11,24 @@ import {
   useColorMode,
   useBreakpointValue,
   HStack,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 import { FaPlay, FaInfoCircle } from "react-icons/fa";
 import { GameHelpDialog } from "./GameHelpDialog";
 
-export default function Nav() {
+interface NavProps {
+  isHelpDialogOpen: boolean;
+  onOpenHelpDialog: () => void;
+  onCloseHelpDialog: () => void;
+}
+
+const Nav: FC<NavProps> = ({
+  isHelpDialogOpen,
+  onCloseHelpDialog,
+  onOpenHelpDialog,
+}) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box
       bg={useColorModeValue("gray.300", "gray.900")}
@@ -59,13 +67,15 @@ export default function Nav() {
             <Button onClick={toggleColorMode} title="Toggle color mode">
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
-            <Button title="How to play" onClick={onOpen}>
+            <Button title="How to play" onClick={onOpenHelpDialog}>
               <FaInfoCircle />
             </Button>
           </HStack>
         </Flex>
       </Container>
-      <GameHelpDialog isOpen={isOpen} onClose={onClose} />
+      <GameHelpDialog isOpen={isHelpDialogOpen} onClose={onCloseHelpDialog} />
     </Box>
   );
-}
+};
+
+export default Nav;

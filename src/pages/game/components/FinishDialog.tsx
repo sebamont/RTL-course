@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Modal,
@@ -41,6 +42,7 @@ const FinishDialog: FC<FinishDialogProps> = ({
   hiddenWordDefinition,
   hasWon = false,
 }) => {
+  const navigate = useNavigate();
   const [hasVoted, setHasVoted] = useState(false);
   const handleUpvoteWord = () => {
     console.log("upvote word");
@@ -105,6 +107,9 @@ const FinishDialog: FC<FinishDialogProps> = ({
           </VStack>
         </ModalBody>
         <ModalFooter>
+          <Button variant='ghost' colorScheme={'purple'} onClick={() => navigate('/')}>
+              Go to Home
+          </Button>
           <Button
             colorScheme={"purple"}
             as={Link}

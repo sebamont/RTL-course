@@ -10,7 +10,7 @@ interface MicroChartBarProps {
 export const MicrochartBar:FC<MicroChartBarProps> = ({value}) => {
     return (
         <HStack spacing="1px" h={"full"} display={"flex"} alignItems={"flex-end"}>
-            {Array(6).fill(0).map((_,dif) => 
+            {Array(7).fill(0).map((_,dif) => 
             <Box key={dif} w="4px"  h={`${(dif+4)*8}%`} bgColor={ value >= (dif+4) ? "purple.300" : "gray.300"} ></Box>
             )}
         </HStack>

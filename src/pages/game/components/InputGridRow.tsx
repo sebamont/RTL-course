@@ -13,6 +13,7 @@ interface InputGridRowProps {
   posibleAttempts: number;
   gameStatus: GameStatus;
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+  emojiDrawResult: string[];
   setEmojiDrawResult: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
@@ -23,6 +24,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
   posibleAttempts,
   gameStatus,
   setGameStatus,
+  emojiDrawResult,
   setEmojiDrawResult,
 }) => {
   const theme = useTheme();
@@ -98,7 +100,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
       inputProps={Array(hiddenWord.length)
         .fill(0)
         .map((_, index) => ({
-          disabled: gameStatus !== "playing" || locked,
+          disabled: gameStatus !== "playing" || locked || emojiDrawResult.length < rowNumber,
           style:
             letterMatch.length === hiddenWord.length
               ? {

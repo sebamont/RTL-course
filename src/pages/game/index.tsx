@@ -113,6 +113,7 @@ const Game: FC = () => {
             gameStatus={gameStatus}
             setGameStatus={setGameStatus}
             setEmojiDrawResult={setEmojiDrawResult}
+            emojiDrawResult={emojiDrawResult}
           />
         ) : (
           <Spinner size="xl" />

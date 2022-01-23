@@ -9,10 +9,11 @@ interface InputGridProps {
   posibleAttempts: number;
   gameStatus: GameStatus
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>
+  emojiDrawResult: string[];
   setEmojiDrawResult: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus, setGameStatus, setEmojiDrawResult }) => {
+const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus, setGameStatus, emojiDrawResult, setEmojiDrawResult }) => {
   return (
     <Flex direction={"column"} alignItems={"center"} >
       {Array(posibleAttempts)
@@ -26,6 +27,7 @@ const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus
             posibleAttempts={posibleAttempts}
             gameStatus={gameStatus}
             setGameStatus={setGameStatus}
+            emojiDrawResult={emojiDrawResult}
             setEmojiDrawResult={setEmojiDrawResult}
           />
         ))}

@@ -11,13 +11,14 @@ import {
   Link,
   VStack,
 } from "@chakra-ui/react";
+import { FaTwitter, FaWhatsapp } from "react-icons/fa";
 
 interface ShareButtonsProps {
-    twMessage?: string
+  twMessage?: string
   wppMessage?: string;
   linkHref: string;
 }
-const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, twMessage="Hey! I've just won this wordle game. Could you? ", wppMessage="Hey! I've just won this wordle game. Could you? " }) => {
+const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, twMessage="Hey! Could you guess the hidden word?", wppMessage="Hey! Could you guess the hidden word?" }) => {
   const [copied, setCopied] = useState(false);
 
   return (
@@ -34,10 +35,9 @@ const ShareButtons: FC<ShareButtonsProps> = ({ linkHref, twMessage="Hey! I've ju
       </InputGroup>
       <Divider />
       <HStack alignItems={"center"} spacing="4px">
-          <Button colorScheme={"green"} as={Link} href={`https://wa.me/?text=${wppMessage}%0A ${encodeURIComponent(linkHref)}` } isExternal>Share via whatsapp</Button>
-          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(linkHref)}&text=${twMessage}%0a` } isExternal>Share via Twitter</Button>
+          <Button colorScheme={"green"} as={Link} href={`https://wa.me/?text=${wppMessage}%0A ${encodeURIComponent(linkHref)}` } isExternal leftIcon={<FaWhatsapp />}>Whatsapp</Button>
+          <Button className="twitter-share-button" colorScheme={"cyan"} as={Link} href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(linkHref)}&text=${twMessage}%0a` } isExternal leftIcon={<FaTwitter />}>Tweet</Button>
       </HStack>
-      
     </VStack>
   );
 };

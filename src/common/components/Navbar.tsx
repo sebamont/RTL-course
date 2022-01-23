@@ -45,7 +45,7 @@ const Nav: FC<NavProps> = ({
               )}
               bgClip="text"
               fontWeight="extrabold"
-              fontSize={"lg"}
+              fontSize={{base:'md', sm:'xl'}}
             >
               &lt;Hello Wordle /&gt;
             </Text>

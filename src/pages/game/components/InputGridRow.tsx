@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import RICIBs from "react-individual-character-input-boxes";
 
-import { useTheme, useColorMode } from "@chakra-ui/react";
+import { useTheme, useColorMode, useBreakpointValue } from "@chakra-ui/react";
 
 import { GameStatus, LetterMatch } from "../types";
 import { drawEmojiRow, isAValidWord } from "../../../helpers/functions";
@@ -23,10 +23,10 @@ const InputGridRow: FC<InputGridRowProps> = ({
   posibleAttempts,
   gameStatus,
   setGameStatus,
-  setEmojiDrawResult
+  setEmojiDrawResult,
 }) => {
-  const theme = useTheme()
-  const {colorMode} = useColorMode()
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
   const [locked, setLocked] = useState(false);
   const [attemptWord, setAttemptWord] = useState("");
   const [letterMatch, setLetterMatch] = useState<LetterMatch[]>([]);
@@ -77,7 +77,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
       }
     });
     setLetterMatch(match);
-    setEmojiDrawResult((prev) => prev.concat(drawEmojiRow(match)))
+    setEmojiDrawResult((prev) => prev.concat(drawEmojiRow(match)));
   }, [attemptWord, hiddenWord, setEmojiDrawResult]);
 
   useEffect(() => {
@@ -85,6 +85,10 @@ const InputGridRow: FC<InputGridRowProps> = ({
       checkLetterMatches();
     }
   }, [attemptWord, checkLetterMatches]);
+
+  const responsiveSize = useBreakpointValue({base:`${240/hiddenWord.length}px`, md:'45px'})
+  const responsiveFontSize = useBreakpointValue({base:`${180/hiddenWord.length}px`, md:'34px'})
+  
 
   return (
     <RICIBs
@@ -99,8 +103,40 @@ const InputGridRow: FC<InputGridRowProps> = ({
             letterMatch.length === hiddenWord.length
               ? {
                   backgroundColor: letterMatch[index].scoreColor,
+                  width:
+                    hiddenWord.length > 6
+                      ? responsiveSize
+                      : "45px",
+                  height:
+                    hiddenWord.length > 6
+                      ? responsiveSize
+                      : "45px",
+                  fontSize:
+                    hiddenWord.length > 6
+                      ? responsiveFontSize
+                      : "34px",
                 }
-              : {border: `2px solid ${theme.colors.gray[colorMode==='dark' ? 400 : 600]}`, backgroundColor: colorMode === 'dark' ? theme.colors.gray[700] : theme.colors.white},
+              : {
+                  border: `2px solid ${
+                    theme.colors.gray[colorMode === "dark" ? 400 : 600]
+                  }`,
+                  backgroundColor:
+                    colorMode === "dark"
+                      ? theme.colors.gray[700]
+                      : theme.colors.white,
+                  width:
+                    hiddenWord.length > 6
+                      ? responsiveSize
+                      : "45px",
+                  height:
+                    hiddenWord.length > 6
+                      ? responsiveSize
+                      : "45px",
+                  fontSize:
+                    hiddenWord.length > 6
+                      ? responsiveFontSize
+                      : "34px",
+                },
           id: `${rowNumber}-${index}`,
         }))}
       inputRegExp={/^[a-zA-Z]$/}

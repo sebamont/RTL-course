@@ -8,7 +8,7 @@ import { Box, Spinner, VStack } from "@chakra-ui/react";
 import InputGrid from "./components/InputGrid";
 import { GameStatus, NumberFrom4To10 } from "./types";
 import { CLASSIC_FEATURES, secretPhrase } from "../../helpers/constants";
-import { getWordDefinition } from "../../helpers/functions";
+import { getWordDefinition, isAValidWord } from "../../helpers/functions";
 import GameInfo from "./components/GameInfo";
 import FinishDialog from "./components/FinishDialog";
 
@@ -18,7 +18,7 @@ const Game: FC = () => {
   const [hiddenWordDefinition, setHiddenWordDefinition] = useState("");
   const [gameStatus, setGameStatus] = useState<GameStatus>("playing");
   const [emojiDrawResult, setEmojiDrawResult] = useState<string[]>([]);
-  const [openFinishDialog, setOpenFinishDialog] = useState(false)
+  const [openFinishDialog, setOpenFinishDialog] = useState(false);
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
 
   const QUERYWORD = useMemo(() => {
@@ -42,8 +42,8 @@ const Game: FC = () => {
   const ATTEMPTS = useMemo(() => {
     const attempts = queryParams.get("attempts");
     return attempts && Number(attempts) > 3 && Number(attempts) < 11
-      ? Number(attempts) as NumberFrom4To10
-      : CLASSIC_FEATURES.attempts as NumberFrom4To10;
+      ? (Number(attempts) as NumberFrom4To10)
+      : (CLASSIC_FEATURES.attempts as NumberFrom4To10);
   }, [queryParams]);
 
   const shareableLink = useMemo(() => {
@@ -73,8 +73,14 @@ const Game: FC = () => {
           `https://intense-reaches-30246.herokuapp.com/${DIFFICULTY}`
         );
         if (res.data.word) {
-          sethiddenWord(res.data.word.toLowerCase());
-          validWord = true;
+          const isValid = await isAValidWord(res.data.word);
+          if (isValid) {
+            sethiddenWord(res.data.word.toLowerCase());
+            validWord = true;
+          }
+          else {
+            console.log("remove word from database", res.data.word)
+          }
         }
       }
     };
@@ -88,7 +94,7 @@ const Game: FC = () => {
     };
     if (gameStatus !== "playing") {
       fetchDefinition();
-        setOpenFinishDialog(true)
+      setOpenFinishDialog(true);
     }
   }, [gameStatus, hiddenWord]);
 
@@ -112,7 +118,7 @@ const Game: FC = () => {
           <Spinner size="xl" />
         )}
         {gameStatus !== "playing" && hiddenWordDefinition && (
-          <FinishDialog 
+          <FinishDialog
             openFinishDialog={openFinishDialog}
             setOpenFinishDialog={setOpenFinishDialog}
             hiddenWord={hiddenWord}
@@ -120,7 +126,7 @@ const Game: FC = () => {
             shareableLink={shareableLink}
             attempts={ATTEMPTS}
             emojiDrawResult={emojiDrawResult}
-            hasWon={gameStatus==='won'}
+            hasWon={gameStatus === "won"}
           />
         )}
       </Box>

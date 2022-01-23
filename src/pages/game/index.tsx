@@ -70,7 +70,7 @@ const Game: FC = () => {
       }
       while (!validWord) {
         const res = await axios.get(
-          "https://intense-reaches-30246.herokuapp.com/"
+          `https://intense-reaches-30246.herokuapp.com/${DIFFICULTY}`
         );
         if (res.data.word) {
           sethiddenWord(res.data.word.toLowerCase());

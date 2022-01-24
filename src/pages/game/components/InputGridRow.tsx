@@ -117,6 +117,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
                     hiddenWord.length > 6
                       ? responsiveFontSize
                       : "34px",
+                  color: 'black',
                 }
               : {
                   border: `2px solid ${

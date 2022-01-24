@@ -55,7 +55,6 @@ const InputGridRow: FC<InputGridRowProps> = ({
         return setGameStatus("lost");
       }
       return setOpenInvalidWordDialog(true)
-
     }
   };
 

@@ -1,8 +1,6 @@
 import React, { FC, useState } from "react";
 
-import {
-  Flex,
-} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import InputGridRow from "./InputGridRow";
 import { GameStatus } from "../types";
@@ -49,8 +47,6 @@ const InputGrid: FC<InputGridProps> = ({
         <InvalidWordDialog
           setOpenInvalidWordDialog={setOpenInvalidWordDialog}
           openInvalidWordDialog={openInvalidWordDialog}
-          emojiDrawResult={emojiDrawResult}
-          hiddenWord={hiddenWord}
         />
       )}
     </Flex>

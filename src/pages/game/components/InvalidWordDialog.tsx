@@ -14,21 +14,14 @@ import {
 interface InvalidWordDialogProps {
   setOpenInvalidWordDialog: React.Dispatch<React.SetStateAction<boolean>>;
   openInvalidWordDialog: boolean;
-  emojiDrawResult: string[];
-  hiddenWord: string;
 }
 
 const InvalidWordDialog: FC<InvalidWordDialogProps> = ({
   setOpenInvalidWordDialog,
   openInvalidWordDialog,
-  emojiDrawResult,
-  hiddenWord,
 }) => {
   const handleCloseInvalidWordDialog = () => {
     setOpenInvalidWordDialog(false);
-    document
-      .getElementById(`${emojiDrawResult.length}-${hiddenWord.length - 1}`)
-      ?.focus();
   };
   return (
     <Modal
@@ -40,7 +33,9 @@ const InvalidWordDialog: FC<InvalidWordDialogProps> = ({
       <ModalContent>
         <ModalHeader>Invalid word</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>That is not a valid english word, please try again</ModalBody>
+        <ModalBody>
+          That is not a valid english word, please try again
+        </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="purple"

@@ -15,6 +15,7 @@ interface InputGridRowProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
   emojiDrawResult: string[];
   setEmojiDrawResult: React.Dispatch<React.SetStateAction<string[]>>;
+  setOpenInvalidWordDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const InputGridRow: FC<InputGridRowProps> = ({
@@ -26,6 +27,7 @@ const InputGridRow: FC<InputGridRowProps> = ({
   setGameStatus,
   emojiDrawResult,
   setEmojiDrawResult,
+  setOpenInvalidWordDialog
 }) => {
   const theme = useTheme();
   const { colorMode } = useColorMode();
@@ -52,7 +54,8 @@ const InputGridRow: FC<InputGridRowProps> = ({
         }
         return setGameStatus("lost");
       }
-      return alert("Invalid word");
+      return setOpenInvalidWordDialog(true)
+
     }
   };
 

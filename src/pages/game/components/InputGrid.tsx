@@ -1,8 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+
+import { Flex, Modal, ModalBody, ModalOverlay, ModalContent, ModalCloseButton, ModalHeader, ModalFooter, Button  } from "@chakra-ui/react";
 
 import InputGridRow from "./InputGridRow";
 import { GameStatus } from "../types";
-import { Flex } from "@chakra-ui/react";
 
 interface InputGridProps {
   hiddenWord: string;
@@ -14,6 +15,13 @@ interface InputGridProps {
 }
 
 const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus, setGameStatus, emojiDrawResult, setEmojiDrawResult }) => {
+  const [openInvalidWordDialog, setOpenInvalidWordDialog] = useState(false)
+
+  const handleCloseInvalidWordDialog = () => {
+    setOpenInvalidWordDialog(false)
+    document.getElementById(`${emojiDrawResult.length}-${hiddenWord.length - 1}`)?.focus()
+  }
+
   return (
     <Flex direction={"column"} alignItems={"center"} >
       {Array(posibleAttempts)
@@ -29,8 +37,26 @@ const InputGrid: FC<InputGridProps> = ({ hiddenWord, posibleAttempts, gameStatus
             setGameStatus={setGameStatus}
             emojiDrawResult={emojiDrawResult}
             setEmojiDrawResult={setEmojiDrawResult}
+            setOpenInvalidWordDialog={setOpenInvalidWordDialog}
           />
         ))}
+        {openInvalidWordDialog && (
+          <Modal  isOpen={openInvalidWordDialog} onClose={handleCloseInvalidWordDialog}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Modal Title</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              Invalid word, please try again
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={handleCloseInvalidWordDialog}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        )}
     </Flex>
   );
 };

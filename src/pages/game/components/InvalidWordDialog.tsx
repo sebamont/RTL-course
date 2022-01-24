@@ -38,7 +38,7 @@ const InvalidWordDialog: FC<InvalidWordDialogProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
+        <ModalHeader>Invalid word</ModalHeader>
         <ModalCloseButton />
         <ModalBody>That is not a valid english word, please try again</ModalBody>
         <ModalFooter>

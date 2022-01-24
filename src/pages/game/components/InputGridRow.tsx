@@ -103,7 +103,6 @@ const InputGridRow: FC<InputGridRowProps> = ({
         .fill(0)
         .map((_, index) => ({
           disabled: gameStatus !== "playing" || locked || emojiDrawResult.length < rowNumber,
-          autofocus:false,
           autocomplete:false,
           autocorrect:false,
           autocapitalize: false,

@@ -7,7 +7,7 @@ export const isAValidWord = async(word:string) => {
             `https://owlbot.info/api/v4/dictionary/${word}`,
             {
               headers: {
-                Authorization: "Token e5150ccd369ec7a59ffe470c7106c3c7b2c8d645",
+                Authorization: `Token ${process.env.REACT_APP_OWLBOT_TOKEN}`,
               },
             }
           );
@@ -22,7 +22,7 @@ export const getWordDefinition = async(word:string) => {
     const res = await axios.get(`https://owlbot.info/api/v4/dictionary/${word}`,
     {
       headers: {
-        Authorization: "Token e5150ccd369ec7a59ffe470c7106c3c7b2c8d645",
+        Authorization: `Token ${process.env.REACT_APP_OWLBOT_TOKEN}`,
       },
     })
     return res.data.definitions[0].definition as string

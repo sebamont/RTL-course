@@ -70,7 +70,7 @@ const Game: FC = () => {
       }
       while (!validWord) {
         const res = await axios.get(
-          `https://intense-reaches-30246.herokuapp.com/${DIFFICULTY}`
+          `${process.env.REACT_APP_RANDOM_WORD_URL}/${DIFFICULTY}`
         );
         if (res.data.word) {
           const isValid = await isAValidWord(res.data.word);
